@@ -1,0 +1,41 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f7f7f8;
+    color: #111827;
+}
+
+.page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+}
+
+.hero {
+    width: 100%;
+    max-width: 48rem;
+    padding: 2rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.06);
+}
+
+.hero h1 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 2rem;
+}
+
+.hero p {
+    margin: 0;
+    line-height: 1.6;
+}
