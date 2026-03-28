@@ -9,10 +9,34 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ExpenseCategory {
+  FOOD
+  TRANSPORT
+  ENTERTAINMENT
+  HEALTH
+  UTILITIES
+}
+
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String    @id @default(cuid())
+  email        String    @unique
   passwordHash String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  expenses     Expense[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Expense {
+  id          String          @id @default(cuid())
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Decimal         @db.Decimal(10, 2)
+  category    ExpenseCategory
+  description String
+  spentAt     DateTime
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([userId, spentAt])
+  @@index([userId, category])
 }
