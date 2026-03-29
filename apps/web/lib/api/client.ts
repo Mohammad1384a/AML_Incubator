@@ -1,3 +1,13 @@
+export class ApiRequestError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiRequestError";
+    this.status = status;
+  }
+}
+
 type ApiErrorPayload = {
   message?: string | string[];
   error?: string;
@@ -41,10 +51,10 @@ export async function apiRequest<T>(
 
       message = payloadMessage ?? payload.error ?? message;
     } catch {
-      // ignore JSON parse issues and keep fallback message
+      // keep fallback message
     }
 
-    throw new Error(message);
+    throw new ApiRequestError(message, response.status);
   }
 
   if (response.status === 204) {

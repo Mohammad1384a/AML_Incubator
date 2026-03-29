@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -13,7 +12,6 @@ import {
 } from "../../lib/validations/register-form.schema";
 
 export function RegisterForm() {
-  const router = useRouter();
   const [formError, setFormError] = useState<string>("");
 
   const {
@@ -29,8 +27,8 @@ export function RegisterForm() {
       setFormError("");
       await authApi.register(values);
       await authApi.login(values);
-      router.push("/dashboard");
-      router.refresh();
+
+      window.location.assign("/dashboard");
     } catch (error) {
       setFormError(
         error instanceof Error ? error.message : "Unable to register.",

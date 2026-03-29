@@ -26,11 +26,36 @@ const previewExpenses = [
   { label: "Gym", category: "HEALTH", amount: "$35.00" },
 ];
 
-export default async function HomePage() {
-  const cookieStore = await cookies();
-  const hasAccessToken = Boolean(cookieStore.get("access_token")?.value);
+async function hasValidSession(): Promise<boolean> {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  if (hasAccessToken) {
+  if (!baseUrl) {
+    return false;
+  }
+
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+
+  if (!cookieHeader) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(`${baseUrl}/auth/me`, {
+      headers: {
+        cookie: cookieHeader,
+      },
+      cache: "no-store",
+    });
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+export default async function HomePage() {
+  if (await hasValidSession()) {
     redirect("/dashboard");
   }
 

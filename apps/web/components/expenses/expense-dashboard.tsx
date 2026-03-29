@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { authApi } from "../../lib/api/auth";
+import { ApiRequestError } from "../../lib/api/client";
 import {
   expenseApi,
   type Expense,
@@ -40,6 +41,11 @@ export function ExpenseDashboard() {
   const [isMutating, setIsMutating] = useState(false);
   const [error, setError] = useState("");
 
+  const redirectToLogin = useCallback(() => {
+    router.replace("/login");
+    router.refresh();
+  }, [router]);
+
   const loadData = useCallback(async (): Promise<void> => {
     try {
       setIsLoading(true);
@@ -55,11 +61,16 @@ export function ExpenseDashboard() {
       setExpenses(nextExpenses);
       setSummary(nextSummary);
     } catch (loadError) {
+      if (loadError instanceof ApiRequestError && loadError.status === 401) {
+        redirectToLogin();
+        return;
+      }
+
       setError(getErrorMessage(loadError));
     } finally {
       setIsLoading(false);
     }
-  }, [filters]);
+  }, [filters, redirectToLogin]);
 
   useEffect(() => {
     void loadData();
@@ -72,6 +83,14 @@ export function ExpenseDashboard() {
       await expenseApi.create(payload);
       await loadData();
     } catch (mutationError) {
+      if (
+        mutationError instanceof ApiRequestError &&
+        mutationError.status === 401
+      ) {
+        redirectToLogin();
+        return;
+      }
+
       setError(getErrorMessage(mutationError));
     } finally {
       setIsMutating(false);
@@ -88,6 +107,14 @@ export function ExpenseDashboard() {
       await expenseApi.update(expenseId, payload);
       await loadData();
     } catch (mutationError) {
+      if (
+        mutationError instanceof ApiRequestError &&
+        mutationError.status === 401
+      ) {
+        redirectToLogin();
+        return;
+      }
+
       setError(getErrorMessage(mutationError));
     } finally {
       setIsMutating(false);
@@ -101,6 +128,14 @@ export function ExpenseDashboard() {
       await expenseApi.remove(expenseId);
       await loadData();
     } catch (mutationError) {
+      if (
+        mutationError instanceof ApiRequestError &&
+        mutationError.status === 401
+      ) {
+        redirectToLogin();
+        return;
+      }
+
       setError(getErrorMessage(mutationError));
     } finally {
       setIsMutating(false);
@@ -110,10 +145,8 @@ export function ExpenseDashboard() {
   async function handleLogout(): Promise<void> {
     try {
       await authApi.logout();
-      router.push("/login");
-      router.refresh();
-    } catch (logoutError) {
-      setError(getErrorMessage(logoutError));
+    } finally {
+      window.location.assign("/login");
     }
   }
 

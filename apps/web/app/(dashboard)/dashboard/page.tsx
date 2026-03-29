@@ -1,9 +1,5 @@
-import { RegisterForm } from "../../../components/auth/register-form";
+import { ExpenseDashboard } from "../../../components/expenses/expense-dashboard";
 
-export default function RegisterPage() {
-  return (
-    <main className="page auth-page">
-      <RegisterForm />
-    </main>
-  );
+export default function DashboardPage() {
+  return <ExpenseDashboard />;
 }
