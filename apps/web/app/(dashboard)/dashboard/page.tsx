@@ -1,12 +1,9 @@
-import { JSX } from "react";
+import { RegisterForm } from "../../../components/auth/register-form";
 
-export default function DashboardPage(): JSX.Element {
+export default function RegisterPage() {
   return (
-    <main className="page">
-      <section className="hero">
-        <h1>Dashboard</h1>
-        <p>Protected dashboard placeholder.</p>
-      </section>
+    <main className="page auth-page">
+      <RegisterForm />
     </main>
   );
 }

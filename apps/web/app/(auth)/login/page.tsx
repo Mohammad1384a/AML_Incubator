@@ -1,12 +1,9 @@
-import { JSX } from "react";
+import { LoginForm } from "../../../components/auth/login-form";
 
-export default function LoginPage(): JSX.Element {
+export default function LoginPage() {
   return (
-    <main className="page">
-      <section className="hero">
-        <h1>Login</h1>
-        <p>Login page placeholder.</p>
-      </section>
+    <main className="page auth-page">
+      <LoginForm />
     </main>
   );
 }

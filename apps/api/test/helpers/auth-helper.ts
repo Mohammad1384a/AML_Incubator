@@ -1,5 +1,5 @@
 import type { INestApplication } from "@nestjs/common";
-import request from "supertest";
+import request, { type Test } from "supertest";
 
 export type AuthCredentials = {
   email: string;
@@ -18,18 +18,18 @@ export function createAuthCredentials(
   };
 }
 
-export async function registerUser(
+export function registerUser(
   app: INestApplication,
   credentials: AuthCredentials,
-) {
+): Test {
   return request(app.getHttpServer())
     .post("/api/auth/register")
     .send(credentials);
 }
 
-export async function loginUser(
+export function loginUser(
   app: INestApplication,
   credentials: AuthCredentials,
-) {
+): Test {
   return request(app.getHttpServer()).post("/api/auth/login").send(credentials);
 }
